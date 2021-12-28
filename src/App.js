@@ -1,11 +1,14 @@
 import React from "react";
-
+import Header from "./components/Layout/header/Header";
+import Meals from "./components/Meals/Meals";
 const App = () => {
   return (
-    <div>
-      <h2>HEy thereee..</h2>
-      <h2>HEy thereee..</h2>
-    </div>
+    <>
+      <Header />
+      <main>
+        <Meals />
+      </main>
+    </>
   );
 };
 
