@@ -9,6 +9,12 @@ const HeaderCartButton = ({ onClick }) => {
   const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
     return curNumber + item.amount;
   }, 0);
+  //adsfkaj
+  //adsfkaj
+  //adsfkajafasdfa
+  //adsfkajafasdfa
+  //adsfkajafasdfa
+  //adsfkajafasdfa
 
   return (
     <button className={classes.button} onClick={onClick}>
