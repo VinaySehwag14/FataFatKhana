@@ -26,7 +26,7 @@ const CartProvider = (props) => {
   );
 
   const addItemToCartHandler = (item) => {
-    defaultCartState({
+    dispatchCartAction({
       type: "ADD_ITEM",
       item: item,
     });
