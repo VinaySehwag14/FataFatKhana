@@ -6,10 +6,11 @@ import MealItem from "./MealItem/MealItem";
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // *Fething meal data from firebase
-
   useEffect(() => {
+    setIsLoading(true);
     try {
       const fetchMeals = async () => {
         const response = await axios.get(
@@ -24,12 +25,12 @@ const AvailableMeals = () => {
           loadedMeals.push({
             id: key,
             name: Objdata[key].name,
-            description: Objdata[key].name,
+            description: Objdata[key].description,
             price: Objdata[key].price,
           });
         }
         setMeals(loadedMeals);
-        console.log(response);
+        setIsLoading(false);
       };
 
       fetchMeals();
@@ -38,22 +39,28 @@ const AvailableMeals = () => {
     }
   }, []);
 
+  if (isLoading) {
+    return <section className={style.MealIsLoading}>Loading...</section>;
+  }
+
+  //* Rendering meal items
+
+  const mealsList = meals.map((meal) => {
+    return (
+      <MealItem
+        key={meal.id}
+        id={meal.id}
+        name={meal.name}
+        description={meal.description}
+        price={meal.price}
+      />
+    );
+  });
+
   return (
     <section className={style.meals}>
       <Card>
-        <ul>
-          {meals.map((meal) => {
-            return (
-              <MealItem
-                key={meal.id}
-                id={meal.id}
-                name={meal.name}
-                description={meal.description}
-                price={meal.price}
-              />
-            );
-          })}
-        </ul>
+        <ul>{mealsList}</ul>
       </Card>
     </section>
   );
