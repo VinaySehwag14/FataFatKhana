@@ -14,7 +14,7 @@ const AvailableMeals = () => {
     setIsLoading(true);
     const fetchMeals = async () => {
       const response = await axios.get(
-        "https://fatafatkhana-1b8d8-defult-rtdb.firebaseio.com/meals.json"
+        "https://fatafatkhana-1b8d8-default-rtdb.firebaseio.com/meals.json"
       );
 
       const Objdata = response.data;
