@@ -8,6 +8,14 @@
 .MealIsLoading {
   text-align: center;
   color: white;
+  padding-top: 0.8em;
+}
+
+.MealsError {
+  text-align: center;
+  color: red;
+  padding-top: 0.5em;
+  font-size: 1.5rem;
 }
 
 .meals ul {

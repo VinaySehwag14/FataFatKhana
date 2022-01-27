@@ -7,40 +7,48 @@ import MealItem from "./MealItem/MealItem";
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [httpError, setHttpError] = useState(null);
 
   // *Fething meal data from firebase
   useEffect(() => {
     setIsLoading(true);
-    try {
-      const fetchMeals = async () => {
-        const response = await axios.get(
-          "https://fatafatkhana-1b8d8-default-rtdb.firebaseio.com/meals.json"
-        );
+    const fetchMeals = async () => {
+      const response = await axios.get(
+        "https://fatafatkhana-1b8d8-defult-rtdb.firebaseio.com/meals.json"
+      );
 
-        const Objdata = response.data;
+      const Objdata = response.data;
 
-        const loadedMeals = [];
+      const loadedMeals = [];
 
-        for (const key in Objdata) {
-          loadedMeals.push({
-            id: key,
-            name: Objdata[key].name,
-            description: Objdata[key].description,
-            price: Objdata[key].price,
-          });
-        }
-        setMeals(loadedMeals);
-        setIsLoading(false);
-      };
+      for (const key in Objdata) {
+        loadedMeals.push({
+          id: key,
+          name: Objdata[key].name,
+          description: Objdata[key].description,
+          price: Objdata[key].price,
+        });
+      }
+      setMeals(loadedMeals);
+      setIsLoading(false);
+    };
 
-      fetchMeals();
-    } catch (err) {
-      console.log(err);
-    }
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
   }, []);
 
   if (isLoading) {
     return <section className={style.MealIsLoading}>Loading...</section>;
+  }
+
+  if (httpError) {
+    return (
+      <section className={style.MealsError}>
+        <p>{httpError}</p>
+      </section>
+    );
   }
 
   //* Rendering meal items
