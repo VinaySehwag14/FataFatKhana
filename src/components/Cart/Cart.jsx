@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useContext, useState } from "react";
 import CartContext from "../../store/CartContext";
 import Modal from "../UI/Modal/Modal";
@@ -27,6 +28,19 @@ const Cart = ({ onClose }) => {
     setIsCheckout(true);
   };
 
+  //*submitOrderhandler for getting data from checkout
+  const submitOrderHandler = (userData) => {
+    //*send data to server
+    axios.post(
+      "https://fatafatkhana-1b8d8-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        user: userData,
+        orderedItems: cartCtx.items,
+      }
+    );
+  };
+
   const cartItems = (
     <ul className={style["cart-items"]}>
       {cartCtx.items.map((item) => (
@@ -50,7 +64,9 @@ const Cart = ({ onClose }) => {
         <span>{totalAmount}</span>
       </div>
 
-      {isCheckout && <Checkout onCancel={onClose} />}
+      {isCheckout && (
+        <Checkout onSubmit={submitOrderHandler} onCancel={onClose} />
+      )}
       {!isCheckout && (
         <div className={style.actions}>
           <button className={style["button--alt"]} onClick={onClose}>

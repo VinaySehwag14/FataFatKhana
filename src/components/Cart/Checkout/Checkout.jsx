@@ -6,7 +6,7 @@ import style from "./checkout.module.css";
 const isEmpty = (value) => value.trim() === "";
 const isFiveChars = (value) => value.trim().length === 6;
 
-const Checkout = ({ onCancel }) => {
+const Checkout = ({ onCancel, onSubmit }) => {
   const [formInputValidity, setFormInputValidity] = useState({
     name: true,
     street: true,
@@ -50,6 +50,14 @@ const Checkout = ({ onCancel }) => {
     if (!formIsValid) {
       return;
     }
+
+    //*send data to server
+    onSubmit({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode,
+    });
   };
 
   const nameControlClasses = `${style.control} ${
