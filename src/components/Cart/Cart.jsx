@@ -9,6 +9,15 @@ import Checkout from "./Checkout/Checkout";
 const Cart = ({ onClose }) => {
   const [isCheckout, setIsCheckout] = useState(false);
 
+  //* state for error handling
+  const [error, setError] = useState(null);
+
+  //*state for form submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  //*state for form did submit
+  const [didSubmit, setDidSubmit] = useState(false);
+
   const cartCtx = useContext(CartContext);
 
   console.log(cartCtx, "this is y contes");
@@ -29,16 +38,24 @@ const Cart = ({ onClose }) => {
   };
 
   //*submitOrderhandler for getting data from checkout
-  const submitOrderHandler = (userData) => {
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true);
     //*send data to server
-    axios.post(
-      "https://fatafatkhana-1b8d8-default-rtdb.firebaseio.com/orders.json",
-      {
-        method: "POST",
-        user: userData,
-        orderedItems: cartCtx.items,
-      }
-    );
+    await axios
+      .post(
+        "https://fatafatkhana-1b8d8-default-rtdb.firebaseio.com/orders.json",
+        {
+          method: "POST",
+          user: userData,
+          orderedItems: cartCtx.items,
+        }
+      )
+      .catch((error) => {
+        setError(error.message);
+        console.log(error, "this is my order error");
+      });
+    setIsSubmitting(false);
+    setDidSubmit(true);
   };
 
   const cartItems = (
@@ -56,8 +73,8 @@ const Cart = ({ onClose }) => {
     </ul>
   );
 
-  return (
-    <Modal onClose={onClose}>
+  const cartModalContent = (
+    <>
       {cartItems}
       <div className={style.total}>
         <span>Total Amount</span>
@@ -80,6 +97,38 @@ const Cart = ({ onClose }) => {
           )}
         </div>
       )}
+    </>
+  );
+
+  const isSubmittingModalContent = <p>Sending order data...</p>;
+
+  const didSubmitModalContent = (
+    <>
+      <p>Order Successfull</p>
+      <div className={style.actions}>
+        <button className={style.button} onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <Modal onClose={onClose}>
+      {error && (
+        <p
+          style={{
+            color: "Red",
+            textAlign: "center",
+          }}
+          className={style.error}
+        >
+          {error}
+        </p>
+      )}
+      {!error && !isSubmitting && !didSubmit && cartModalContent}
+      {!error && isSubmitting && isSubmittingModalContent}
+      {!error && !isSubmitting && didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
